@@ -1,0 +1,9 @@
+---
+// Statut Ouvert / Fermé calculé côté navigateur (fuseau Europe/Paris). Voir Base.astro pour le script.
+interface Props { class?: string }
+const { class: cls = '' } = Astro.props;
+---
+<p class:list={['inline-flex items-center gap-2', cls]} data-statut aria-live="polite">
+  <span class="pastille" aria-hidden="true"></span>
+  <span data-statut-texte>Midi 12h00–14h30, soir 19h00–22h30, 7j/7</span>
+</p>

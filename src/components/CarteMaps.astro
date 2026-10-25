@@ -1,0 +1,29 @@
+---
+import site from '../data/site.json';
+---
+<div class="cadre bg-papier-2 aspect-[4/3] sm:aspect-[16/10] w-full" data-carte-maps>
+  <div class="absolute inset-0 flex flex-col items-start justify-end gap-3 p-5 sm:p-7" data-carte-facade>
+    <p class="font-display text-2xl sm:text-3xl font-semibold leading-tight max-w-[22ch]">53 avenue du Général de Gaulle, Saint-Brice-sous-Forêt</p>
+    <p class="text-encre-2 max-w-[44ch] text-[0.95rem]">La carte Google Maps n’est chargée que si vous la demandez : Google peut alors déposer des cookies.</p>
+    <div class="flex flex-wrap gap-3">
+      <button type="button" class="btn btn-trait" data-carte-bouton>Afficher la carte</button>
+      <a class="btn btn-laque" href={site.itineraire} target="_blank" rel="noopener">Itinéraire Google Maps</a>
+    </div>
+  </div>
+</div>
+<script define:vars={{ src: site.carteEmbed }}>
+  document.querySelectorAll('[data-carte-bouton]').forEach((b) => {
+    b.addEventListener('click', () => {
+      const box = b.closest('[data-carte-maps]');
+      const f = document.createElement('iframe');
+      f.src = src;
+      f.title = 'Plan d’accès au restaurant Le Porte Bonheur';
+      f.loading = 'lazy';
+      f.referrerPolicy = 'no-referrer-when-downgrade';
+      f.className = 'absolute inset-0 w-full h-full border-0';
+      box.querySelector('[data-carte-facade]').remove();
+      box.appendChild(f);
+      f.focus();
+    });
+  });
+</script>

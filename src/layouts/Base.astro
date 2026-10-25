@@ -1,0 +1,200 @@
+---
+import '../styles/global.css';
+import site from '../data/site.json';
+import Sceau from '../components/Sceau.astro';
+import Statut from '../components/Statut.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  jsonLdExtra?: object[];
+  noindex?: boolean;
+}
+const { title, description, jsonLdExtra = [], noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+const ogImage = new URL('/og.png', Astro.site).toString();
+const base = Astro.site!.toString().replace(/\/$/, '');
+
+const restaurant = {
+  '@context': 'https://schema.org',
+  '@type': 'Restaurant',
+  '@id': `${base}/#restaurant`,
+  name: site.nom,
+  url: `${base}/`,
+  image: ogImage,
+  telephone: '+33 1 34 29 10 11',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.adresse.rue,
+    postalCode: site.adresse.codePostal,
+    addressLocality: site.adresse.ville,
+    addressRegion: 'Val-d’Oise',
+    addressCountry: site.adresse.pays,
+  },
+  // geo (latitude / longitude) : [À CONFIRMER] — à ajouter quand les coordonnées exactes seront relevées.
+  hasMap: site.ficheGoogle,
+  servesCuisine: ['Chinese', 'Thai'],
+  acceptsReservations: true,
+  hasMenu: `${base}/la-carte/`,
+  paymentAccepted: site.paiements.join(', '),
+  areaServed: [site.adresse.ville, ...site.communesVoisines],
+  openingHoursSpecification: site.services.map((s) => ({
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+    opens: s.debut,
+    closes: s.fin,
+  })),
+  amenityFeature: [
+    { '@type': 'LocationFeatureSpecification', name: 'Terrasse', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Accessible en fauteuil roulant', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Parking gratuit', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Chaises hautes', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Chiens acceptés', value: true },
+  ],
+  ...(site.sameAs.length ? { sameAs: site.sameAs } : {}),
+};
+const jsonLd = [restaurant, ...jsonLdExtra];
+
+const nav = [
+  { href: '/la-carte/', label: 'La carte' },
+  { href: '/#menus', label: 'Menus' },
+  { href: '/#a-emporter', label: 'À emporter' },
+  { href: '/#infos', label: 'Infos pratiques' },
+];
+const annee = new Date().getFullYear();
+---
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {!noindex && <link rel="canonical" href={canonical} />}
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="theme-color" content="#f2e8d2" />
+    <meta property="og:type" content="restaurant" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:site_name" content={site.nom} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Le Porte Bonheur, restaurant chinois et thaï à Saint-Brice-sous-Forêt" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body class="min-h-screen flex flex-col pb-[4.75rem] md:pb-0">
+    <a href="#contenu" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:bg-papier focus:px-4 focus:py-3">Aller au contenu</a>
+
+    <header class="border-b border-or/60 bg-papier">
+      <div class="conteneur flex flex-wrap items-center justify-between gap-x-6 gap-y-1 py-2.5 text-[0.95rem]">
+        <Statut class="font-semibold" />
+        <a href={`tel:${site.telephoneLien}`} class="hidden md:inline font-semibold tabular-nums no-underline hover:underline">{site.telephone}</a>
+      </div>
+      <div class="border-t border-or/60">
+        <nav class="conteneur flex items-center justify-between gap-4 py-3" aria-label="Navigation principale">
+          <a href="/" class="flex items-center gap-2.5 no-underline min-h-11" aria-label="Le Porte Bonheur, accueil">
+            <Sceau class="w-9 h-9 rotate-[-7deg]" />
+            <span translate="no" class="font-display text-[1.35rem] font-bold leading-none tracking-tight" style="font-variation-settings:'opsz' 36,'SOFT' 50">Le Porte Bonheur</span>
+          </a>
+          <ul class="hidden md:flex items-center gap-1 lg:gap-3">
+            {nav.map((n) => (
+              <li><a href={n.href} class="inline-flex items-center min-h-11 px-2 font-semibold no-underline hover:underline decoration-laque decoration-2">{n.label}</a></li>
+            ))}
+          </ul>
+          <a href="/la-carte/" class="md:hidden inline-flex items-center min-h-11 px-1 font-semibold underline decoration-laque decoration-2">La carte</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="contenu" class="flex-1">
+      <slot />
+    </main>
+
+    <footer class="bg-encre text-papier sur-jade">
+      <div class="conteneur grid gap-10 py-14 md:grid-cols-[1.3fr_1fr_1fr]">
+        <div>
+          <p class="font-display text-3xl font-bold" style="font-variation-settings:'opsz' 72,'SOFT' 50">Le Porte Bonheur</p>
+          <p class="mt-1 text-papier/80">Restaurant chinois et thaï, service à table</p>
+          <address class="not-italic mt-5 leading-relaxed">
+            {site.adresse.rue}<br />{site.adresse.codePostal} {site.adresse.ville}<br />
+            <a href={`tel:${site.telephoneLien}`} class="inline-flex items-center min-h-11 font-semibold tabular-nums">{site.telephone}</a>
+          </address>
+        </div>
+        <div>
+          <p class="font-display text-xl font-semibold">Horaires</p>
+          <p class="mt-3">Tous les jours, 7j/7</p>
+          <p>Midi : 12h00 – 14h30</p>
+          <p>Soir : 19h00 – 22h30</p>
+          <p class="mt-3 text-papier/80">Sur place, à emporter, livraison, traiteur</p>
+        </div>
+        <div>
+          <p class="font-display text-xl font-semibold">Le site</p>
+          <ul class="mt-2">
+            <li><a href="/la-carte/" class="inline-flex items-center min-h-11">La carte</a></li>
+            <li><a href="/mentions-legales/" class="inline-flex items-center min-h-11">Mentions légales</a></li>
+            <li><a href="/politique-de-confidentialite/" class="inline-flex items-center min-h-11">Politique de confidentialité</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-papier/20">
+        <p class="conteneur py-5 text-sm text-papier/75">© {annee} Le Porte Bonheur, Saint-Brice-sous-Forêt. Restaurant chinois et thaï près de Groslay, Montmorency, Sarcelles, Deuil-la-Barre, Montmagny, Domont et Ézanville.</p>
+      </div>
+    </footer>
+
+    <!-- Barre d’appel fixe, mobile uniquement -->
+    <div class="md:hidden fixed inset-x-0 bottom-0 z-40 grid grid-cols-[1fr_auto] gap-2 border-t-2 border-laque bg-papier px-3 pt-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))]">
+      <a href={`tel:${site.telephoneLien}`} class="btn btn-laque w-full !min-h-12">Appeler le {site.telephone}</a>
+      <a href={site.itineraire} target="_blank" rel="noopener" class="btn btn-trait !min-h-12 !px-4">Itinéraire</a>
+    </div>
+
+    <script>
+      // Statut Ouvert / Fermé, fuseau Europe/Paris. Services : 12:00–14:30 et 19:00–22:30, 7j/7.
+      const SERVICES = [
+        [12 * 60, 14 * 60 + 30],
+        [19 * 60, 22 * 60 + 30],
+      ];
+      const fmt = (m: number) => `${Math.floor(m / 60)}h${String(m % 60).padStart(2, '0')}`;
+      function maintenantParis() {
+        const parts = new Intl.DateTimeFormat('fr-FR', {
+          timeZone: 'Europe/Paris', weekday: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
+        }).formatToParts(new Date());
+        const get = (t: string) => parts.find((p) => p.type === t)?.value ?? '';
+        const jours = ['dim.', 'lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.'];
+        return { jour: jours.indexOf(get('weekday')), minutes: parseInt(get('hour'), 10) * 60 + parseInt(get('minute'), 10) };
+      }
+      function majStatut() {
+        const { jour, minutes } = maintenantParis();
+        let ouvert = false;
+        let texte = '';
+        const enCours = SERVICES.find(([d, f]) => minutes >= d && minutes < f);
+        if (enCours) {
+          ouvert = true;
+          const reste = enCours[1] - minutes;
+          texte = reste <= 30 ? `Ouvert, ferme bientôt (${fmt(enCours[1])})` : `Ouvert maintenant, jusqu’à ${fmt(enCours[1])}`;
+        } else {
+          const prochain = SERVICES.find(([d]) => minutes < d);
+          texte = prochain ? `Fermé, réouverture à ${fmt(prochain[0])}` : `Fermé, réouverture demain à ${fmt(SERVICES[0][0])}`;
+        }
+        document.querySelectorAll<HTMLElement>('[data-statut]').forEach((el) => {
+          el.dataset.ouvert = ouvert ? 'oui' : 'non';
+          const t = el.querySelector('[data-statut-texte]');
+          if (t) t.textContent = texte;
+        });
+        document.querySelectorAll<HTMLElement>('tr[data-jour]').forEach((tr) => {
+          const estAujourdhui = Number(tr.dataset.jour) === jour;
+          tr.toggleAttribute('data-aujourdhui', estAujourdhui);
+          const l = tr.querySelector('[data-aujourdhui-label]');
+          if (l) l.textContent = estAujourdhui ? " (aujourd’hui)" : '';
+        });
+      }
+      majStatut();
+      setInterval(majStatut, 60_000);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,9 @@
+---
+// Quatre coins en frette 回, posés dans un parent .cadre
+const coins = ['hg', 'hd', 'bg', 'bd'];
+---
+{coins.map((c) => (
+  <svg class={`coin ${c}`} viewBox="0 0 26 26" aria-hidden="true" focusable="false">
+    <path d="M1 25V1h24M6 25V6h14v10h-9v-5h4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" />
+  </svg>
+))}

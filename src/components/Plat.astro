@@ -1,0 +1,14 @@
+---
+interface Props { num?: string; nom: string; prix: string; detail?: string }
+const { num = '', nom, prix, detail } = Astro.props;
+const marque = (t: string) => t.replace(/\[À CONFIRMER\]/g, '<span class="tbc">[À CONFIRMER]</span>');
+---
+<li class="plat">
+  <span class="plat-num" aria-hidden={num ? undefined : 'true'}>{num && <><span class="sr-only">Plat n°</span>{num}</>}</span>
+  <span class="plat-ligne">
+    <span class="plat-nom">{nom}</span>
+    <span class="plat-points" aria-hidden="true"></span>
+    <span class="plat-prix"><span class="sr-only">Prix : </span><Fragment set:html={marque(prix)} /></span>
+  </span>
+  {detail && <span class="plat-detail" set:html={marque(detail)} />}
+</li>

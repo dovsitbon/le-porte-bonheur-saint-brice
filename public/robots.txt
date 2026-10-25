@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://le-porte-bonheur-saint-brice.vercel.app/sitemap-index.xml

@@ -1,0 +1,26 @@
+{
+  "nom": "Le Porte Bonheur",
+  "type": "Restaurant chinois et thaï",
+  "adresse": {
+    "rue": "53 avenue du Général de Gaulle",
+    "codePostal": "95350",
+    "ville": "Saint-Brice-sous-Forêt",
+    "pays": "FR"
+  },
+  "telephone": "01 34 29 10 11",
+  "telephoneLien": "+33134291011",
+  "itineraire": "https://www.google.com/maps/dir/?api=1&destination=Le+Porte+Bonheur%2C+53+avenue+du+G%C3%A9n%C3%A9ral+de+Gaulle%2C+95350+Saint-Brice-sous-For%C3%AAt",
+  "ficheGoogle": "https://www.google.com/maps/search/?api=1&query=Le+Porte+Bonheur+53+avenue+du+G%C3%A9n%C3%A9ral+de+Gaulle+Saint-Brice-sous-For%C3%AAt",
+  "carteEmbed": "https://www.google.com/maps?q=Le+Porte+Bonheur,+53+avenue+du+G%C3%A9n%C3%A9ral+de+Gaulle,+95350+Saint-Brice-sous-For%C3%AAt&output=embed",
+  "services": [
+    { "debut": "12:00", "fin": "14:30", "nom": "midi" },
+    { "debut": "19:00", "fin": "22:30", "nom": "soir" }
+  ],
+  "joursOuverts": [1, 2, 3, 4, 5, 6, 0],
+  "noteGoogle": "4,3",
+  "nombreAvisGoogle": "650",
+  "avisTripadvisor": "93",
+  "paiements": ["Carte bancaire", "Sans contact", "Ticket Restaurant", "Pluxee", "Bimpli", "Chèque Déjeuner"],
+  "communesVoisines": ["Groslay", "Montmorency", "Sarcelles", "Deuil-la-Barre", "Montmagny", "Domont", "Ézanville"],
+  "sameAs": []
+}

@@ -1,0 +1,101 @@
+---
+import Base from '../layouts/Base.astro';
+import Sceau from '../components/Sceau.astro';
+import Coins from '../components/Coins.astro';
+import Plat from '../components/Plat.astro';
+import site from '../data/site.json';
+import carte from '../data/carte.json';
+
+const tel = `tel:${site.telephoneLien}`;
+const marque = (t: string) => t.replace(/\[À CONFIRMER\]/g, '<span class="tbc">[À CONFIRMER]</span>');
+const base = Astro.site!.toString().replace(/\/$/, '');
+const menuLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Menu',
+  name: 'La carte du Porte Bonheur',
+  url: `${base}/la-carte/`,
+  inLanguage: 'fr',
+  hasMenuSection: carte.categories.map((c) => ({
+    '@type': 'MenuSection',
+    name: c.titre,
+    hasMenuItem: c.plats.map((p) => ({ '@type': 'MenuItem', name: p.nom })),
+  })),
+};
+---
+<Base
+  title="La carte du Porte Bonheur, chinois et thaï à Saint-Brice"
+  description="Nems, soupe thaïlandaise, bœuf sauté au saké, poulet croustillant, fondue chinoise pour 2 : la carte du Porte Bonheur à Saint-Brice, sur place ou à emporter."
+  jsonLdExtra={[menuLd]}
+>
+  <section class="py-10 sm:py-14" aria-labelledby="titre-page">
+    <div class="conteneur">
+      <div class="cadre bg-papier px-4 py-10 sm:px-10 sm:py-14 lg:px-16">
+        <Coins />
+        <header class="relative text-center">
+          <Sceau class="mx-auto w-16 rotate-[-7deg] sm:w-20" />
+          <h1 id="titre-page" class="mt-5 font-black text-laque text-[clamp(3.2rem,12vw,7.5rem)] leading-[0.9] tracking-[-0.035em]" style="font-variation-settings:'opsz' 144,'SOFT' 60,'WONK' 1">La carte</h1>
+          <p class="mx-auto mt-4 max-w-[46ch] text-encre-2">Cuisine chinoise et thaï, servie à table, midi et soir, 7j/7. Toute la carte est aussi disponible à emporter.</p>
+          <p class="mt-3 text-[0.95rem]">Carte complète et prix : <span class="tbc">[À CONFIRMER]</span></p>
+          <nav aria-label="Rubriques de la carte" class="mt-8">
+            <ul class="flex flex-wrap justify-center gap-x-1 gap-y-1">
+              {carte.categories.map((c) => (
+                <li><a href={`#${c.id}`} class="inline-flex min-h-11 items-center px-3 font-semibold underline decoration-or decoration-2 hover:decoration-laque">{c.titre}</a></li>
+              ))}
+              <li><a href="#formules" class="inline-flex min-h-11 items-center px-3 font-semibold underline decoration-or decoration-2 hover:decoration-laque">Formules</a></li>
+            </ul>
+          </nav>
+        </header>
+
+        <div class="mt-12 columns-1 gap-16 lg:columns-2 [column-rule:1px_dotted_rgb(168_132_63/0.6)]">
+          {carte.categories.map((c) => (
+            <section id={c.id} class="break-inside-avoid mb-12" aria-labelledby={`t-${c.id}`}>
+              <h2 id={`t-${c.id}`} class="text-[2rem] font-bold border-b-2 border-encre pb-2" style="font-variation-settings:'opsz' 72,'SOFT' 50">{c.titre}</h2>
+              <ul class="mt-1">
+                {c.plats.map((p) => <Plat num={p.num} nom={p.nom} prix={p.prix} detail={(p as any).detail} />)}
+              </ul>
+              {c.suite && <p class="mt-2 pl-[2.5rem] text-[0.95rem] text-encre-2" set:html={marque(c.suite)} />}
+            </section>
+          ))}
+        </div>
+
+        <section id="formules" class="mt-4 border-t-2 border-encre pt-10" aria-labelledby="t-formules">
+          <h2 id="t-formules" class="text-[2rem] font-bold" style="font-variation-settings:'opsz' 72,'SOFT' 50">Menus et formules</h2>
+          <ul class="mt-4 grid gap-x-16 md:grid-cols-3">
+            {carte.formules.map((f) => (
+              <li class="py-4 border-b border-dotted border-encre-2/50 md:border-b-0">
+                <p class="font-display text-xl font-semibold">{f.titre}</p>
+                <p class="text-encre-2" set:html={marque(f.horaire)} />
+                <p class="mt-2" set:html={marque(f.contenu)} />
+                <p class="mt-2 font-bold text-laque" set:html={marque(f.prix)} />
+              </li>
+            ))}
+          </ul>
+          <p class="mt-6">Menus cités par nos clients : {carte.prixCitesParLesClients.join(', ')} <span class="tbc">[À CONFIRMER]</span></p>
+        </section>
+
+        <div class="mt-12 grid gap-8 border-t border-or pt-8 md:grid-cols-3 text-[0.98rem]">
+          <div>
+            <h2 class="font-display text-xl font-semibold">Allergènes</h2>
+            <p class="mt-2">{carte.allergenes}</p>
+          </div>
+          <div>
+            <h2 class="font-display text-xl font-semibold">Végétarien</h2>
+            <p class="mt-2">Des options végétariennes existent à la carte : demandez-les en commandant.</p>
+          </div>
+          <div>
+            <h2 class="font-display text-xl font-semibold">Paiement</h2>
+            <p class="mt-2">Carte bancaire, sans contact, Ticket Restaurant, Pluxee, Bimpli, Chèque Déjeuner.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <p class="font-display text-2xl font-semibold" style="font-variation-settings:'opsz' 48,'SOFT' 50">Sur place ou à emporter, un seul numéro.</p>
+        <div class="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+          <a href={tel} class="btn btn-laque">Réserver par téléphone</a>
+          <a href={tel} class="btn btn-trait">Commander à emporter</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

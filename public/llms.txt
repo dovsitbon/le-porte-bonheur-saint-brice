@@ -1,0 +1,17 @@
+# Le Porte Bonheur
+
+> Restaurant chinois et thaï à Saint-Brice-sous-Forêt (Val-d'Oise), service à table, pas de buffet. Ouvert 7j/7, 12h00–14h30 et 19h00–22h30. Sur place, à emporter, livraison (Uber Eats), traiteur, terrasse.
+
+- Adresse : 53 avenue du Général de Gaulle, 95350 Saint-Brice-sous-Forêt
+- Téléphone (réservations et vente à emporter) : 01 34 29 10 11
+- Note Google : 4,3/5 sur environ 650 avis
+- Paiements : carte bancaire, sans contact, Ticket Restaurant, Pluxee, Bimpli, Chèque Déjeuner
+- Pratique : parking gratuit, accessible en fauteuil roulant (entrée, places, toilettes), chaises hautes, chiens acceptés
+- Plats souvent cités : nems, soupe thaïlandaise, bœuf sauté au saké, poulet sauce pimentée, poulet croustillant, fondue chinoise (formule pour 2), litchis, glaces
+- Communes proches : Groslay, Montmorency, Sarcelles, Deuil-la-Barre, Montmagny, Domont, Ézanville
+
+## Pages
+
+- [Accueil](https://le-porte-bonheur-saint-brice.vercel.app/): présentation, menus, à emporter, avis, le lieu, infos pratiques, FAQ
+- [La carte](https://le-porte-bonheur-saint-brice.vercel.app/la-carte/): plats par catégorie, formules, allergènes
+- [Mentions légales](https://le-porte-bonheur-saint-brice.vercel.app/mentions-legales/)

@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+import Sceau from '../components/Sceau.astro';
+---
+<Base title="Page introuvable | Le Porte Bonheur" description="Cette page n’existe pas sur le site du restaurant Le Porte Bonheur à Saint-Brice-sous-Forêt." noindex>
+  <section class="conteneur py-20 sm:py-28">
+    <Sceau class="w-20 rotate-[-7deg]" />
+    <h1 class="titre-section mt-8">Ce plat n’est pas à la carte.</h1>
+    <p class="mt-4 max-w-[44ch] text-encre-2">La page demandée n’existe pas ou a changé d’adresse.</p>
+    <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+      <a href="/" class="btn btn-laque">Retour à l’accueil</a>
+      <a href="/la-carte/" class="btn btn-trait">Voir la carte</a>
+    </div>
+  </section>
+</Base>

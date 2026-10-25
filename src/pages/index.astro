@@ -1,0 +1,259 @@
+---
+import Base from '../layouts/Base.astro';
+import Sceau from '../components/Sceau.astro';
+import Coins from '../components/Coins.astro';
+import Plat from '../components/Plat.astro';
+import Statut from '../components/Statut.astro';
+import Horaires from '../components/Horaires.astro';
+import CarteMaps from '../components/CarteMaps.astro';
+import { FU_PATH } from '../data/fu-path.js';
+import site from '../data/site.json';
+import carte from '../data/carte.json';
+import avis from '../data/avis.json';
+
+const tel = `tel:${site.telephoneLien}`;
+const extrait = carte.categories
+  .map((c) => ({ ...c, plats: c.plats.filter((p) => p.accueil) }))
+  .filter((c) => c.plats.length);
+const marque = (t: string) => t.replace(/\[À CONFIRMER\]/g, '<span class="tbc">[À CONFIRMER]</span>');
+
+const faq = [
+  { q: 'Faut-il réserver ?', r: 'Les réservations sont acceptées, par téléphone au 01 34 29 10 11, pour le midi comme pour le soir.' },
+  { q: 'Y a-t-il un buffet ?', r: 'Non. Le Porte Bonheur sert à table, des plats à la carte cuisinés à la commande et servis chauds.' },
+  { q: 'Acceptez-vous les titres-restaurant ?', r: 'Oui : Ticket Restaurant, Pluxee, Bimpli et Chèque Déjeuner, en plus de la carte bancaire et du sans contact.' },
+  { q: 'Le restaurant est-il accessible en fauteuil roulant ?', r: 'Oui : l’entrée, les places en salle et les toilettes sont accessibles. Le parking est gratuit.' },
+  { q: 'Peut-on venir avec des enfants ou un chien ?', r: 'Oui. Des chaises hautes sont disponibles et les chiens sont acceptés.' },
+  { q: 'Peut-on commander à emporter ?', r: 'Oui, par téléphone au 01 34 29 10 11, aux heures d’ouverture. Le restaurant livre aussi via Uber Eats.' },
+];
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.r } })),
+};
+---
+<Base
+  title="Le Porte Bonheur, restaurant chinois et thaï à Saint-Brice"
+  description="Restaurant chinois et thaï à Saint-Brice-sous-Forêt, service à table, sans buffet, 7j/7 midi et soir. Sur place, à emporter, traiteur. Tél. 01 34 29 10 11."
+  jsonLdExtra={[faqLd]}
+>
+  <!-- ============ Couverture ============ -->
+  <section class="relative overflow-hidden" aria-labelledby="titre-principal">
+    <div class="conteneur pt-8 pb-12 sm:pt-12 md:pb-16">
+      <div class="cadre px-4 pt-8 pb-8 sm:px-10 sm:pt-12 sm:pb-12 lg:px-14">
+        <Coins />
+        <h1 id="titre-principal" class="relative">
+          <span class="block font-display text-[clamp(1.6rem,5vw,3.25rem)] font-semibold tracking-tight" style="font-variation-settings:'opsz' 72,'SOFT' 50">Le Porte</span>
+          <span class="block -mt-[0.06em] text-laque font-black text-[clamp(4.1rem,20.5vw,17rem)] leading-[0.86] tracking-[-0.045em]" style="font-variation-settings:'opsz' 144,'SOFT' 60,'WONK' 1">Bonheur</span>
+          <span class="sr-only">, restaurant chinois et thaï à Saint-Brice-sous-Forêt</span>
+        </h1>
+        <Sceau anime titre="福, bonheur" class="absolute right-4 top-5 w-14 sm:right-8 sm:top-8 sm:w-28 lg:right-10 lg:top-9 lg:w-36" />
+
+        <div class="mt-8 grid gap-8 md:mt-10 md:grid-cols-[1.25fr_1fr] md:items-end lg:gap-14">
+          <div>
+            <p class="max-w-[34ch] font-display text-[1.45rem] leading-snug sm:text-[1.7rem]" style="font-variation-settings:'opsz' 36,'SOFT' 40">
+              Cuisine chinoise et thaï, servie à table, 7 jours sur 7 depuis plus de 15 ans à Saint-Brice.
+            </p>
+            <p class="mt-3 max-w-[48ch] text-encre-2">Pas de buffet : des plats à la carte, toujours chauds. Au 53 avenue du Général de Gaulle, parking gratuit.</p>
+            <div class="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <a href={tel} class="btn btn-laque">Réserver par téléphone</a>
+              <a href={tel} class="btn btn-trait">Commander à emporter</a>
+            </div>
+          </div>
+          <div class="border-t-2 border-encre pt-4 md:border-t-0 md:border-l-2 md:pl-7 md:pt-0">
+            <Statut class="text-lg font-bold" />
+            <dl class="mt-3 grid grid-cols-[auto_1fr] gap-x-6 gap-y-1">
+              <dt class="font-semibold">Midi</dt><dd class="tabular-nums">12h00 – 14h30</dd>
+              <dt class="font-semibold">Soir</dt><dd class="tabular-nums">19h00 – 22h30</dd>
+            </dl>
+            <p class="mt-3 text-encre-2">Tous les jours. Réservation au <a href={tel} class="font-semibold text-encre tabular-nums whitespace-nowrap">{site.telephone}</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Extrait de la carte ============ -->
+  <section id="carte" class="py-16 md:py-24" aria-labelledby="titre-carte">
+    <div class="conteneur grid gap-10 lg:grid-cols-[18rem_1fr] lg:gap-16">
+      <div>
+        <span class="filet-laque"></span>
+        <h2 id="titre-carte" class="titre-section mt-5">La carte</h2>
+        <p class="mt-4 max-w-[36ch] text-encre-2">Les plats que nos clients citent le plus souvent. La carte complète est sur la page dédiée.</p>
+        <p class="mt-4 text-[0.95rem]">Prix : <span class="tbc">[À CONFIRMER]</span></p>
+        <a href="/la-carte/" class="btn btn-trait mt-7">Voir toute la carte</a>
+      </div>
+      <div class="columns-1 gap-14 md:columns-2 [column-rule:1px_dotted_rgb(168_132_63/0.6)]">
+        {extrait.map((c) => (
+          <div class="break-inside-avoid mb-8">
+            <h3 class="text-2xl font-bold border-b-2 border-encre pb-2" style="font-variation-settings:'opsz' 48,'SOFT' 50">{c.titre}</h3>
+            <ul class="mt-1">
+              {c.plats.map((p) => <Plat num={p.num} nom={p.nom} prix={p.prix} detail={(p as any).detail} />)}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Menus et formules ============ -->
+  <section id="menus" class="bg-papier-2 py-16 md:py-24" aria-labelledby="titre-menus">
+    <div class="conteneur">
+      <div class="flex flex-wrap items-end justify-between gap-6">
+        <div>
+          <span class="filet-laque"></span>
+          <h2 id="titre-menus" class="titre-section mt-5">Menus et formules</h2>
+        </div>
+        <p class="max-w-[42ch] text-encre-2">Entrée, plat, dessert. Nos clients citent des menus à 18,90 €, 20 € et 25 € <span class="tbc">[À CONFIRMER]</span>.</p>
+      </div>
+      <div class="cadre mt-10 bg-papier grid md:grid-cols-3">
+        <Coins />
+        {carte.formules.map((f, i) => (
+          <article class:list={['px-6 py-9 sm:px-9', i > 0 && 'border-t md:border-t-0 md:border-l border-dashed border-or']}>
+            <h3 class="text-[1.9rem] font-bold" style="font-variation-settings:'opsz' 72,'SOFT' 50">{f.titre}</h3>
+            <p class="mt-1 font-semibold text-encre-2" set:html={marque(f.horaire)} />
+            <p class="mt-5" set:html={marque(f.contenu)} />
+            <p class="mt-6 font-display text-3xl font-bold text-laque" set:html={marque(f.prix)} />
+          </article>
+        ))}
+      </div>
+      <p class="mt-6 max-w-[70ch]"><strong>Titres-restaurant acceptés :</strong> Ticket Restaurant, Pluxee, Bimpli, Chèque Déjeuner. Carte bancaire et sans contact.</p>
+    </div>
+  </section>
+
+  <!-- ============ À emporter ============ -->
+  <section id="a-emporter" class="sur-laque bg-laque text-papier py-16 md:py-24" aria-labelledby="titre-emporter">
+    <div class="conteneur grid gap-12 lg:grid-cols-[1.35fr_1fr] lg:items-center">
+      <div>
+        <h2 id="titre-emporter" class="font-black text-[clamp(2.6rem,8vw,5.75rem)] leading-[0.95] tracking-[-0.03em]" style="font-variation-settings:'opsz' 144,'SOFT' 60">
+          Appelez, c’est prêt en&nbsp;<span class="whitespace-nowrap">[X] min</span>
+        </h2>
+        <p class="mt-3"><span class="tbc">[À CONFIRMER] délai de préparation</span></p>
+        <p class="mt-6 max-w-[46ch] text-lg">Commande à emporter par téléphone, midi et soir. Vous passez la prendre au 53 avenue du Général de Gaulle, on se gare facilement.</p>
+        <a href={tel} class="btn btn-papier mt-8 text-lg">Commander au {site.telephone}</a>
+      </div>
+      <aside class="border-2 border-papier/80 p-7 sm:p-9" aria-labelledby="titre-direct">
+        <h3 id="titre-direct" class="text-[1.85rem] font-bold leading-tight" style="font-variation-settings:'opsz' 72,'SOFT' 50">Commandez en direct, c’est mieux pour nous et pour vous</h3>
+        <p class="mt-4">Sur les applications de livraison, une partie de chaque commande part en commission. En appelant le restaurant, tout reste en cuisine, et vous récupérez votre plat encore chaud, au comptoir.</p>
+        <p class="mt-4 text-papier/85">Pas le temps de passer ? Nous livrons aussi via Uber Eats.</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ Avis ============ -->
+  <section id="avis" class="py-16 md:py-24" aria-labelledby="titre-avis">
+    <div class="conteneur grid gap-12 lg:grid-cols-[20rem_1fr] lg:gap-16">
+      <div>
+        <span class="filet-laque"></span>
+        <h2 id="titre-avis" class="titre-section mt-5">Ce qu’en disent les habitués</h2>
+        <p class="mt-8 flex items-baseline gap-3">
+          <span class="font-display font-black text-laque text-[6.5rem] leading-none tracking-tight" style="font-variation-settings:'opsz' 144,'SOFT' 60">4,3</span>
+          <span class="font-semibold text-xl">/ 5</span>
+        </p>
+        <p class="mt-2">Note Google, sur environ 650 avis.<br />Environ 93 avis sur TripAdvisor.</p>
+        <a href={site.ficheGoogle} target="_blank" rel="noopener" class="btn btn-trait mt-6">Lire les avis sur Google</a>
+      </div>
+      <ul class="grid gap-x-12 gap-y-10 sm:grid-cols-2">
+        {avis.map((a) => (
+          <li>
+            <figure>
+              <span class="block font-display text-6xl leading-[0.6] text-laque" aria-hidden="true">«</span>
+              <blockquote class="mt-2 font-display text-[1.3rem] leading-snug" style="font-variation-settings:'opsz' 24,'SOFT' 40">
+                <p>{a.texte}</p>
+              </blockquote>
+              <figcaption class="mt-3 text-[0.95rem] font-semibold text-encre-2">{a.source}</figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ Le lieu ============ -->
+  <section id="le-lieu" class="bg-papier-2 py-16 md:py-24" aria-labelledby="titre-lieu">
+    <div class="conteneur">
+      <span class="filet-laque"></span>
+      <h2 id="titre-lieu" class="titre-section mt-5">Le lieu</h2>
+      <div class="mt-10 grid gap-5 md:grid-cols-[1.6fr_1fr] md:grid-rows-[auto_auto]">
+        <figure class="photo-a-venir bg-jade text-papier min-h-[18rem] md:row-span-2 md:min-h-[30rem]">
+          <svg class="fu-filigrane" viewBox="0 0 1000 1000" aria-hidden="true"><path d={FU_PATH} fill="currentColor" /></svg>
+          <figcaption><strong>Photo à venir :</strong> la salle décorée, vue depuis l’entrée, tables dressées, lumière du soir.</figcaption>
+        </figure>
+        <figure class="photo-a-venir bg-laque text-papier min-h-[14rem]">
+          <figcaption><strong>Photo à venir :</strong> la terrasse aux beaux jours, en fin de matinée.</figcaption>
+        </figure>
+        <figure class="photo-a-venir bg-encre text-papier min-h-[14rem]">
+          <figcaption><strong>Photo à venir :</strong> un plat qui sort de cuisine, servi à table.</figcaption>
+        </figure>
+      </div>
+      <div class="mt-12 grid gap-10 md:grid-cols-2 md:gap-16">
+        <p class="max-w-[46ch] font-display text-[1.45rem] leading-snug" style="font-variation-settings:'opsz' 36,'SOFT' 40">Une salle décorée et calme, une terrasse, et des familles qui reviennent depuis plus de 15 ans.</p>
+        <dl class="divide-y divide-dotted divide-encre-2/50 border-y border-dotted border-encre-2/50">
+          <div class="grid grid-cols-[9.5rem_1fr] gap-4 py-3"><dt class="font-bold">Terrasse</dt><dd>Oui, aux beaux jours</dd></div>
+          <div class="grid grid-cols-[9.5rem_1fr] gap-4 py-3"><dt class="font-bold">Fauteuil roulant</dt><dd>Entrée, places et toilettes accessibles</dd></div>
+          <div class="grid grid-cols-[9.5rem_1fr] gap-4 py-3"><dt class="font-bold">Stationnement</dt><dd>Parking gratuit, on se gare facilement</dd></div>
+          <div class="grid grid-cols-[9.5rem_1fr] gap-4 py-3"><dt class="font-bold">Enfants</dt><dd>Bienvenus, chaises hautes disponibles</dd></div>
+          <div class="grid grid-cols-[9.5rem_1fr] gap-4 py-3"><dt class="font-bold">Chiens</dt><dd>Acceptés</dd></div>
+          <div class="grid grid-cols-[9.5rem_1fr] gap-4 py-3"><dt class="font-bold">Au bar</dt><dd>Cocktails, choix de vins, café</dd></div>
+          <div class="grid grid-cols-[9.5rem_1fr] gap-4 py-3"><dt class="font-bold">Végétarien</dt><dd>Des plats sans viande à la carte</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Traiteur et groupes ============ -->
+  <section id="traiteur" class="sur-jade bg-jade text-papier py-16 md:py-20" aria-labelledby="titre-traiteur">
+    <div class="conteneur grid gap-10 md:grid-cols-[1fr_1fr] md:items-center">
+      <div>
+        <h2 id="titre-traiteur" class="titre-section">Traiteur et groupes</h2>
+        <p class="mt-5 max-w-[46ch] text-lg">Anniversaire, repas de famille, déjeuner d’équipe : on vous réserve la place en salle, ou on prépare une commande traiteur à emporter. De petites portions à partager, pour goûter un peu de tout.</p>
+        <p class="mt-4 text-papier/85">Capacité de la salle et conditions de commande traiteur : <span class="tbc">[À CONFIRMER]</span></p>
+      </div>
+      <div class="md:justify-self-end">
+        <p class="font-semibold">Pour en parler, appelez-nous :</p>
+        <a href={tel} class="mt-3 block font-display font-black text-[clamp(2.2rem,7vw,3.75rem)] leading-none tabular-nums whitespace-nowrap no-underline hover:underline" style="font-variation-settings:'opsz' 144,'SOFT' 60">{site.telephone}</a>
+        <p class="mt-3 text-papier/85">Pendant les heures d’ouverture, 7j/7.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Infos pratiques ============ -->
+  <section id="infos" class="py-16 md:py-24" aria-labelledby="titre-infos">
+    <div class="conteneur">
+      <span class="filet-laque"></span>
+      <h2 id="titre-infos" class="titre-section mt-5">Infos pratiques</h2>
+      <div class="mt-10 grid gap-12 lg:grid-cols-[1fr_1.25fr] lg:gap-16">
+        <div>
+          <h3 class="text-2xl font-bold" style="font-variation-settings:'opsz' 48,'SOFT' 50">Horaires</h3>
+          <div class="mt-4"><Horaires /></div>
+          <Statut class="mt-4 font-semibold" />
+          <h3 class="mt-10 text-2xl font-bold" style="font-variation-settings:'opsz' 48,'SOFT' 50">Adresse et téléphone</h3>
+          <address class="mt-3 not-italic text-lg leading-relaxed">
+            Le Porte Bonheur<br />
+            {site.adresse.rue}<br />
+            {site.adresse.codePostal} {site.adresse.ville}<br />
+            <a href={tel} class="inline-flex items-center min-h-11 font-bold tabular-nums">{site.telephone}</a>
+          </address>
+          <p class="mt-4 max-w-[52ch] text-encre-2">Vous venez de Groslay, Montmorency, Sarcelles, Deuil-la-Barre, Montmagny, Domont ou Ézanville ? Le stationnement est facile et le parking gratuit.</p>
+        </div>
+        <div>
+          <CarteMaps />
+        </div>
+      </div>
+
+      <div class="mt-16 max-w-3xl">
+        <h3 class="text-2xl font-bold" style="font-variation-settings:'opsz' 48,'SOFT' 50">Questions fréquentes</h3>
+        <div class="mt-4 border-t border-encre">
+          {faq.map((f) => (
+            <details class="group border-b border-dotted border-encre-2/60">
+              <summary class="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 py-3 font-semibold text-lg [&::-webkit-details-marker]:hidden">
+                {f.q}
+                <span class="font-display text-2xl text-laque transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+              </summary>
+              <p class="pb-4 max-w-[60ch]">{f.r}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

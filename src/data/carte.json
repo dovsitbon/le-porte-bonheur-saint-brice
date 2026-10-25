@@ -1,0 +1,83 @@
+{
+  "_aide": "Modifiez ici la carte. 'num' = numéro du plat (reprenez ceux de la carte papier), 'prix' = texte affiché tel quel (ex. \"8,50 €\"). Remplacez chaque [À CONFIRMER] par la vraie valeur.",
+  "categories": [
+    {
+      "id": "entrees",
+      "titre": "Entrées",
+      "plats": [
+        { "num": "1", "nom": "Nems", "prix": "[À CONFIRMER]", "accueil": true }
+      ],
+      "suite": "Autres entrées de la carte [À CONFIRMER]"
+    },
+    {
+      "id": "soupes",
+      "titre": "Soupes",
+      "plats": [
+        { "num": "2", "nom": "Soupe thaïlandaise", "prix": "[À CONFIRMER]", "accueil": true }
+      ],
+      "suite": "Autres soupes de la carte [À CONFIRMER]"
+    },
+    {
+      "id": "plats",
+      "titre": "Plats",
+      "plats": [
+        { "num": "3", "nom": "Bœuf sauté au saké", "prix": "[À CONFIRMER]", "accueil": true },
+        { "num": "4", "nom": "Poulet sauce pimentée", "prix": "[À CONFIRMER]", "accueil": true },
+        { "num": "5", "nom": "Poulet croustillant", "prix": "[À CONFIRMER]", "accueil": true }
+      ],
+      "suite": "Autres plats chinois et thaï de la carte [À CONFIRMER]"
+    },
+    {
+      "id": "fondue",
+      "titre": "Fondue chinoise",
+      "plats": [
+        { "num": "6", "nom": "Fondue chinoise", "detail": "Formule pour 2 personnes", "prix": "[À CONFIRMER]", "accueil": true }
+      ],
+      "suite": "Composition de la fondue [À CONFIRMER]"
+    },
+    {
+      "id": "desserts",
+      "titre": "Desserts et glaces",
+      "plats": [
+        { "num": "7", "nom": "Litchis", "prix": "[À CONFIRMER]", "accueil": true },
+        { "num": "8", "nom": "Glaces", "prix": "[À CONFIRMER]", "accueil": false }
+      ],
+      "suite": "Parfums de glaces et autres desserts [À CONFIRMER]"
+    },
+    {
+      "id": "boissons",
+      "titre": "Boissons et cocktails",
+      "plats": [
+        { "num": "", "nom": "Cocktails", "prix": "[À CONFIRMER]", "accueil": false },
+        { "num": "", "nom": "Vins", "detail": "Choix de vins au verre ou à la bouteille [À CONFIRMER]", "prix": "[À CONFIRMER]", "accueil": false },
+        { "num": "", "nom": "Café", "prix": "[À CONFIRMER]", "accueil": false }
+      ],
+      "suite": ""
+    }
+  ],
+  "formules": [
+    {
+      "id": "midi",
+      "titre": "Le midi",
+      "horaire": "12h00 – 14h30",
+      "contenu": "Entrée, plat, dessert [À CONFIRMER]",
+      "prix": "[À CONFIRMER]"
+    },
+    {
+      "id": "soir",
+      "titre": "Le soir",
+      "horaire": "19h00 – 22h30",
+      "contenu": "Entrée, plat, dessert [À CONFIRMER]",
+      "prix": "[À CONFIRMER]"
+    },
+    {
+      "id": "fondue-2",
+      "titre": "Fondue chinoise pour 2",
+      "horaire": "Midi et soir [À CONFIRMER]",
+      "contenu": "Formule pour deux, portion copieuse",
+      "prix": "[À CONFIRMER]"
+    }
+  ],
+  "prixCitesParLesClients": ["18,90 €", "20 €", "25 €"],
+  "allergenes": "Signalez toute allergie en commandant. L'information sur les 14 allergènes réglementaires, plat par plat, est disponible sur demande, en salle ou par téléphone."
+}
